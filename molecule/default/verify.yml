@@ -1,0 +1,25 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Get effective sshd configuration
+      ansible.builtin.command: sshd -T
+      register: sshd_cfg
+      changed_when: false
+
+    - name: Check key SSH settings
+      ansible.builtin.assert:
+        that:
+          - "'permitrootlogin no' in sshd_cfg.stdout"
+          - "'x11forwarding no' in sshd_cfg.stdout"
+          - "'maxauthtries 4' in sshd_cfg.stdout"
+
+    - name: Read pwquality config
+      ansible.builtin.slurp:
+        src: /etc/security/pwquality.conf
+      register: pwq
+
+    - name: Check minimum password length
+      ansible.builtin.assert:
+        that: "'minlen = 14' in (pwq.content | b64decode)"

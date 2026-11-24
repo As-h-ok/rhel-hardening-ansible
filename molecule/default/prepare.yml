@@ -1,0 +1,8 @@
+---
+- name: Prepare
+  hosts: all
+  tasks:
+    - name: Install sshd and generate host keys
+      ansible.builtin.shell: dnf install -y openssh-server && ssh-keygen -A
+      args:
+        creates: /etc/ssh/ssh_host_ed25519_key

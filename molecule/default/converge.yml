@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    password_policy_manage_authselect: false
+  roles:
+    - ssh_hardening
+    - password_policy
+    - services_cleanup
