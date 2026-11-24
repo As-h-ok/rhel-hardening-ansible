@@ -1,0 +1,13 @@
+---
+- name: Apply CIS-style hardening baseline
+  hosts: rhel
+  become: true
+  roles:
+    - { role: ssh_hardening,    tags: [ssh] }
+    - { role: firewall,         tags: [firewall] }
+    - { role: selinux,          tags: [selinux] }
+    - { role: auditd,           tags: [auditd] }
+    - { role: password_policy,  tags: [password] }
+    - { role: services_cleanup, tags: [services] }
+    - { role: chrony,           tags: [time] }
+    - { role: dnf_automatic,    tags: [updates] }
