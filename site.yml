@@ -1,6 +1,6 @@
 ---
 - name: Apply CIS-style hardening baseline
-  hosts: rhel
+  hosts: target
   become: true
   roles:
     - { role: ssh_hardening,    tags: [ssh] }
