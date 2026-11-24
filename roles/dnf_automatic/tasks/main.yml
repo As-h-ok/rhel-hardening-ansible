@@ -1,2 +1,23 @@
 ---
-# tasks file for dnf_automatic
+- name: Install dnf-automatic
+  ansible.builtin.dnf:
+    name: dnf-automatic
+    state: present
+  tags: [updates]
+
+- name: Apply security updates automatically
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: '^\s*{{ item.key }}\s*='
+    line: "{{ item.key }} = {{ item.value }}"
+  loop:
+    - { key: upgrade_type, value: security }
+    - { key: apply_updates, value: "yes" }
+  tags: [updates]
+
+- name: Enable dnf-automatic timer
+  ansible.builtin.systemd:
+    name: dnf-automatic.timer
+    enabled: true
+    state: started
+  tags: [updates]
