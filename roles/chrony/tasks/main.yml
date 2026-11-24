@@ -1,2 +1,13 @@
 ---
-# tasks file for chrony
+- name: Install chrony
+  ansible.builtin.dnf:
+    name: chrony
+    state: present
+  tags: [time, package_chrony_installed]
+
+- name: Enable and start chronyd
+  ansible.builtin.service:
+    name: chronyd
+    enabled: true
+    state: started
+  tags: [time, service_chronyd_enabled]
