@@ -1,2 +1,43 @@
 ---
-# tasks file for ssh_hardening
+- name: Ensure OpenSSH server is installed
+  ansible.builtin.dnf:
+    name: openssh-server
+    state: present
+  tags: [ssh]
+
+- name: Deploy login banner
+  ansible.builtin.copy:
+    content: "{{ ssh_banner_text }}\n"
+    dest: /etc/issue.net
+    owner: root
+    group: root
+    mode: "0644"
+  tags: [ssh, sshd_enable_warning_banner]
+
+- name: Deploy hardened sshd drop-in config
+  ansible.builtin.template:
+    src: 00-hardening.conf.j2
+    dest: /etc/ssh/sshd_config.d/00-hardening.conf
+    owner: root
+    group: root
+    mode: "0600"
+    validate: /usr/sbin/sshd -t -f %s
+  notify: Restart sshd
+  tags:
+    - ssh
+    - sshd_disable_root_login
+    - sshd_disable_empty_passwords
+    - sshd_set_max_auth_tries
+    - sshd_set_idle_timeout
+    - sshd_set_keepalive
+    - sshd_disable_x11_forwarding
+    - sshd_do_not_permit_user_env
+    - sshd_disable_rhosts
+
+- name: Secure sshd_config permissions
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: "0600"
+  tags: [ssh, file_permissions_sshd_config]

@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+PermitRootLogin {{ ssh_permit_root_login }}
+PasswordAuthentication {{ ssh_password_authentication }}
+PermitEmptyPasswords no
+MaxAuthTries {{ ssh_max_auth_tries }}
+ClientAliveInterval {{ ssh_client_alive_interval }}
+ClientAliveCountMax {{ ssh_client_alive_count_max }}
+LoginGraceTime {{ ssh_login_grace_time }}
+X11Forwarding no
+HostbasedAuthentication no
+IgnoreRhosts yes
+PermitUserEnvironment no
+LogLevel INFO
+Banner /etc/issue.net
