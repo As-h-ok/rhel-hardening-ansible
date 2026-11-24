@@ -1,2 +1,18 @@
 ---
-# tasks file for selinux
+- name: Install SELinux packages
+  ansible.builtin.dnf:
+    name: [selinux-policy-targeted, libselinux-utils]
+    state: present
+  tags: [selinux]
+
+- name: Set SELinux to enforcing with targeted policy
+  ansible.posix.selinux:
+    policy: targeted
+    state: enforcing
+  tags: [selinux, selinux_state, selinux_policytype]
+
+- name: Remove packages that CIS discourages
+  ansible.builtin.dnf:
+    name: [setroubleshoot, mcstrans]
+    state: absent
+  tags: [selinux, package_setroubleshoot_removed, package_mcstrans_removed]
