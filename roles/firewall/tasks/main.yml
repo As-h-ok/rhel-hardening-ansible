@@ -1,2 +1,31 @@
 ---
-# tasks file for firewall
+- name: Install firewalld
+  ansible.builtin.dnf:
+    name: firewalld
+    state: present
+  tags: [firewall, package_firewalld_installed]
+
+- name: Enable and start firewalld
+  ansible.builtin.service:
+    name: firewalld
+    enabled: true
+    state: started
+  tags: [firewall, service_firewalld_enabled]
+
+- name: Allow required services
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: "{{ firewall_allowed_services }}"
+  tags: [firewall]
+
+- name: Remove unneeded services from the active zone
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: disabled
+  loop: "{{ firewall_removed_services }}"
+  tags: [firewall]
