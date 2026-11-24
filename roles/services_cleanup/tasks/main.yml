@@ -1,2 +1,18 @@
 ---
-# tasks file for services_cleanup
+- name: Stop and disable unneeded services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: stopped
+    enabled: false
+  loop: "{{ services_to_disable }}"
+  register: svc_result
+  failed_when:
+    - svc_result.failed | default(false)
+    - "'Could not find' not in svc_result.msg | default('')"
+  tags: [services]
+
+- name: Remove insecure or unneeded packages
+  ansible.builtin.dnf:
+    name: "{{ packages_to_remove }}"
+    state: absent
+  tags: [services, package_telnet-server_removed, package_tftp-server_removed, package_ypserv_removed]

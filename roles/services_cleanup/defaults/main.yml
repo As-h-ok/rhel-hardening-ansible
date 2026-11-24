@@ -1,2 +1,15 @@
 ---
-# defaults file for services_cleanup
+services_to_disable:
+  - avahi-daemon
+  - cups
+  - rpcbind
+  - rpcbind.socket
+  - telnet.socket
+  - vsftpd
+  - tftp.socket
+packages_to_remove:
+  - telnet-server
+  - tftp-server
+  - rsh-server
+  - ypserv
+  - xinetd
