@@ -1,2 +1,4 @@
 ---
-# handlers file for selinux
+- name: Reload audit rules
+  ansible.builtin.command: augenrules --load
+  changed_when: true
