@@ -1,2 +1,15 @@
 ---
-# defaults file for password_policy
+password_policy_manage_authselect: true
+pwquality_settings:
+  minlen: 14
+  minclass: 4
+  maxrepeat: 3
+  retry: 3
+login_defs:
+  PASS_MAX_DAYS: 365
+  PASS_MIN_DAYS: 1
+  PASS_WARN_AGE: 7
+faillock_settings:
+  deny: 5
+  unlock_time: 900
+  fail_interval: 900

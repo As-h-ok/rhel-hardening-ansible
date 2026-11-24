@@ -1,2 +1,38 @@
 ---
-# tasks file for password_policy
+- name: Configure password quality (pwquality)
+  ansible.builtin.lineinfile:
+    path: /etc/security/pwquality.conf
+    regexp: '^\s*#?\s*{{ item.key }}\s*='
+    line: "{{ item.key }} = {{ item.value }}"
+  loop: "{{ pwquality_settings | dict2items }}"
+  tags: [password, accounts_password_pam_minlen, accounts_password_pam_minclass]
+
+- name: Set password aging defaults in login.defs
+  ansible.builtin.lineinfile:
+    path: /etc/login.defs
+    regexp: '^\s*#?\s*{{ item.key }}\b'
+    line: "{{ item.key }} {{ item.value }}"
+  loop: "{{ login_defs | dict2items }}"
+  tags: [password, accounts_maximum_age_login_defs, accounts_minimum_age_login_defs]
+
+- name: Read current authselect configuration
+  ansible.builtin.command: authselect current --raw
+  register: authselect_current
+  changed_when: false
+  when: password_policy_manage_authselect | bool
+  tags: [password]
+
+- name: Enable faillock feature in authselect
+  ansible.builtin.command: authselect enable-feature with-faillock
+  when:
+    - password_policy_manage_authselect | bool
+    - "'with-faillock' not in authselect_current.stdout"
+  tags: [password, accounts_passwords_pam_faillock_deny]
+
+- name: Configure account lockout (faillock)
+  ansible.builtin.lineinfile:
+    path: /etc/security/faillock.conf
+    regexp: '^\s*#?\s*{{ item.key }}\s*='
+    line: "{{ item.key }} = {{ item.value }}"
+  loop: "{{ faillock_settings | dict2items }}"
+  tags: [password, accounts_passwords_pam_faillock_deny, accounts_passwords_pam_faillock_unlock_time]
