@@ -1,20 +1,7 @@
-# RHEL Hardening & Compliance Automation
-
 [![lint](https://github.com/<As-h-ok>/rhel-hardening-ansible/actions/workflows/lint.yml/badge.svg)](https://github.com/<As-h-ok>/rhel-hardening-ansible/actions/workflows/lint.yml)
 
 One Ansible playbook takes a fresh RHEL 9 server to a CIS Level 1-style hardened
 baseline, and an OpenSCAP scan proves the result with before/after reports.
-
-## Results
-
-| | Before | After |
-|---|---|---|
-| OpenSCAP score | **XX%** | **YY%** |
-| Screenshot | ![before](docs/screenshots/OpenSCAP Evaluation Report.png) | ![after](docs/screenshots/after-score.png) |
-
-- Profile: `xccdf_org.ssgproject.content_profile_cis_server_l1`
-- Datastream: `<ssg-rhel9-ds.xml | ssg-rl9-ds.xml | ssg-almalinux9-ds.xml>`
-- Full HTML reports: [`scans/before/`](scans/before/) and [`scans/after/`](scans/after/)
 
 ## Stack
 
